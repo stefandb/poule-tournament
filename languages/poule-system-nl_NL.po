@@ -1,0 +1,202 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: poule-system\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: Mon Oct 07 2013 16:25:43 GMT+0200 (West-Europa "
+"(zomertijd))\n"
+"PO-Revision-Date: 2013-10-07 17:30+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: Dutch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Loco-Target-Locale: nl_NL\n"
+
+msgid "Poule score"
+msgstr "Poule score"
+
+msgid "poule settings"
+msgstr "Poule instellingen"
+
+msgid "Incorrect tournament phase"
+msgstr "Toernooi fase bestaat niet"
+
+msgid "Incorrect Tournament Phase"
+msgstr "Toernooi fase bestaat niet"
+
+msgid "incorrect user"
+msgstr "Gebruiker bestaat niet"
+
+msgid "Country 1"
+msgstr "Land 1"
+
+msgid "Score"
+msgstr "Score"
+
+msgid "Country 2"
+msgstr "Land 2"
+
+msgid "back"
+msgstr "Terug"
+
+msgid "No matches"
+msgstr "Geen wedstrijden"
+
+msgid "Podium"
+msgstr "Podium"
+
+msgid "podium place"
+msgstr "Podium plaats"
+
+msgid "fullname"
+msgstr "Volledige naam"
+
+msgid "points"
+msgstr "Punten"
+
+msgid "country 1"
+msgstr "land 1"
+
+msgid "score country 1"
+msgstr "Score land 1"
+
+msgid "score country 2"
+msgstr "Score land 2"
+
+msgid "country 2"
+msgstr "land 2"
+
+msgid "save"
+msgstr "Opslaan"
+
+msgid "no matches"
+msgstr "Geen wedstrijden"
+
+msgid "hours show matches"
+msgstr "Laat de wedstrijden zien van de afgelopen uur"
+
+msgid "only matches without score"
+msgstr "Laat alleen wedstrijden zien zonder score"
+
+msgid "Register"
+msgstr "Registreer"
+
+msgid "Set type of tournament"
+msgstr "Plaat type of toernooi"
+
+msgid "tournament type is WK"
+msgstr "Type toernooi is WK"
+
+msgid "reset all"
+msgstr "Reset alles"
+
+msgid "Reset all"
+msgstr "Reset alles"
+
+msgid "reset admin score"
+msgstr "Reset admin score"
+
+msgid "reset user score"
+msgstr "Reset de score van de gebruikers"
+
+msgid "Edit country"
+msgstr "Bewerk land"
+
+msgid "Country name"
+msgstr "Land naam"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "delete"
+msgstr "Verwijderen"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Country do not exist"
+msgstr "Land bestaat niet"
+
+msgid "Countries"
+msgstr "Landen"
+
+msgid "Number"
+msgstr "Nummer"
+
+msgid "Add"
+msgstr "Toevoegen"
+
+msgid "Add country"
+msgstr "Land toevoegen"
+
+msgid "Save Country"
+msgstr "Land opslaan"
+
+msgid "Groupname"
+msgstr "Groep's naam"
+
+msgid "starttime"
+msgstr "Starttijd"
+
+msgid "Group is deletet"
+msgstr "Groep is verwijdert"
+
+msgid "Add Match"
+msgstr "Wedstrijd toevoegen"
+
+msgid "Auto Match"
+msgstr "Auto wedstrijden aanmaken"
+
+msgid "Add matches"
+msgstr "Wedstrijden toevoegen"
+
+msgid "Group name"
+msgstr "Groep naam"
+
+msgid "Login required"
+msgstr "Login is verplicht"
+
+msgid "poule podium"
+msgstr "Podium"
+
+msgid "poule score"
+msgstr "Poule score"
+
+msgid "own score"
+msgstr "Eigen score"
+
+msgid "Start time"
+msgstr "Starttijd"
+
+msgid "set score"
+msgstr "Score plaatsen"
+
+msgid "Group"
+msgstr "Groep"
+
+msgid "18 Final"
+msgstr "1/8 Finale"
+
+msgid "Quaterfinal"
+msgstr "Kwartfinale"
+
+msgid "Semifinal"
+msgstr "Halvefinale"
+
+msgid "3 4 Place"
+msgstr "3e 4e Plaats"
+
+msgid "Final"
+msgstr "Finale"
+
+msgid "countries"
+msgstr "Landen"
+
+msgid "matches"
+msgstr "Wedstrijden"
+
+msgid "score"
+msgstr "Score"

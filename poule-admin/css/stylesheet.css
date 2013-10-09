@@ -1,0 +1,19 @@
+/* 
+    Document   : stylesheet
+    Created on : 30-sep-2013, 18:47:07
+    Author     : Stefan
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.form-succes{
+	border-color: green !important;
+}
+
+.form-error{
+	border-color: red !important;
+}
+
+.form-warning{
+	border-color: orange !important;
+}
