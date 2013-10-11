@@ -4,7 +4,7 @@
 	  Plugin Name: Poule tournament
 	  Plugin URI: http://stefandebruin.eu/plugin-poule
 	  Description: Wordpress plugin to set you online poule tournament system
-	  Version: 1
+	  Version: 1.0.1
 	  Author: Stefan de Bruin
 	  Author URI: http://stefandebruin.eu
 	 */

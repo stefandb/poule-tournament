@@ -275,7 +275,7 @@
 		global $wpdb;
 
 		if (!is_user_logged_in()) {
-			echo '<div class="alert alert-danger">' . _e('Login required', 'poule-system') . ' link naar login form</div>';
+			echo '<div class="alert alert-danger">' . __('Login required', 'poule-system') . '</div>';
 		} else {
 
 			$current_user = wp_get_current_user();

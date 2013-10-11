@@ -28,7 +28,3 @@
 	</table>
 
 </div>
-
-<?php if ( get_option( 'users_can_register' ) ) : ?>
-	<?php echo apply_filters( 'register', sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) ) ); ?>
-<?php endif; ?>
