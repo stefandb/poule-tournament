@@ -1,9 +1,9 @@
 === Plugin Name ===
-Contributors: stefandebruin
-Tags: tournament, poule, wk, ek
+Contributors: stefan_d_b
+Tags: tournament, poule, wk, ek, admin, dashboard, widget
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.0.1
+Tested up to: 3.6.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,11 @@ Features include:
 * a result/podium page
 * crete automatic the user pages
 * a dashboard widget with the last matches
+
+Scores:
+* match winnar correct 1 point
+* match score correct 2 points
+* penalty winnar correct 1 point
 
 == Installation ==
  
@@ -43,9 +48,25 @@ Yes, but not the group matches
 = 1 =
 * First version published
 
+= 1.0.1 =
+* change the activation script
+
+= 1.1 =
+* this update introduce a date time picker.
+* url security
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+Fix a activation bug. that by every activation create the pages.
+
+= 1.1 =
+Add a date time picker and add url security.
+
 == Coming soon ==
 
-The next featers comming with the next update
+The next featers comming with the next updates
 
 * More language translations and update the current language
 * users can create there own group for the result/podium
+* add the last settings functions

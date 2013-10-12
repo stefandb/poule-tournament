@@ -1,7 +1,7 @@
 <div class="wrap">
 	<?php if (!isset($_POST['delete'])) { ?>
 
-		<?php if ($phase_id != NULL) { ?>
+		<?php if ($phase_id != NULL && $update == null && $group != null) { ?>
 
 			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post">
 
@@ -40,7 +40,10 @@
 											<tr>
 												<td>
 													<div>
-														<input type="text" class="<?php echo $errors[$i]['date'] ?>" name="match[<?php echo $match['match_id']; ?>][date]" value="<?php echo $match['date'] ?>"/>
+<!--														<input type="text" class="<?php echo $errors[$i]['date'] ?>" name="match[<?php echo $match['match_id']; ?>][date]" value="<?php echo $match['datefull'] ?>"/>-->
+
+														<input type="date" ng-model="dateString" class="<?php echo $errors[$i]['date']; ?>" name="match[<?php echo $match['match_id']; ?>][date]" value="<?php echo $match['date']; ?>"/>
+														<input type="time" class="<?php echo $errors[$i]['time']; ?>" name="match[<?php echo $match['match_id']; ?>][time]" value="<?php echo $match['time']; ?>"/>
 													</div>
 												</td>
 												<td>
@@ -79,15 +82,22 @@
 
 			</form>
 
-		<?php } else { ?>
+		<?php } else if($phase_id != NULL && $update === TRUE && $group != null) { ?>
 
 			<div id="message" class="error"><p><?php _e('Incorrect tournament phase', 'poule-system') ?></p></div>
 
+		<?php }else{ ?>
+			<?php if($group == null){ ?>
+			
+			<div id="message" class="error"><p> <?php _e('Error in the url', 'poule-system')?> </p></div>
+			
+			<?php }else{ ?>
+			<div id="message" class="updated"><p><?php _e('changes are saved', 'poule-system') ?></p></div>
+			<?php } ?>
 		<?php } ?>
-
 	<?php } else { ?>
 
-		<div id="message" class="success"><p><?php _e('Group is deletet', 'poule-system') ?></p></div>
+		<div id="message" class="updated"><p><?php _e('Group is deletet', 'poule-system') ?></p></div>
 
 	<?php } ?>
 </div>

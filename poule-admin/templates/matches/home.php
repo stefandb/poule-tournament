@@ -49,9 +49,8 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
-
-				<?php } ?>
+					<?php } ?>
+				</div>
 			</div>
 		</div>
 
@@ -60,7 +59,7 @@
 		<div id="message" class="error"><p><?php _e('No matches', 'poule-system') ?></p></div>
 
 	<?php } ?>
-		
+
 	<a class="button-secondary" href="?page=matches&function=add&phase=<?php echo $phase; ?>" title="All Attendees"><?php _e('Add Match', 'poule-system') ?></a>
 	<a class="button-secondary" href="?page=matches&function=auto&phase=<?php echo $phase; ?>" title="All Attendees"><?php _e('Auto Match', 'poule-system') ?></a>
 

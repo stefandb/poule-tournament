@@ -99,10 +99,10 @@ class matches {
 				$errors['group_name'] = "form-succes";
 			}
 
-			foreach ($_POST['match'] as $key => $value) {
+			foreach ($user_input['match'] as $key => $value) {
 				$selected[$i] = array();
 				if ($value['date'] != "") {
-					if (date('d-m-Y H:i:s', strtotime($value['date'])) != $value['date']) {
+					if (!$this->validateDate($value['date'], "Y-m-d")) {
 						$insert = FALSE;
 						$errors[$i]['date'] = "form-error";
 						$user_input['match'][$i]['date'] = "";
@@ -110,8 +110,29 @@ class matches {
 						$errors[$i]['date'] = "form-succes";
 					}
 				} else {
+					$insert = FALSE;
 					$errors[$i]['date'] = "form-error";
 				}
+
+				if ($value['date'] != "") {
+					if (strlen($value['time']) == 5) {
+						$time = $value['time'] . ':00';
+					} else {
+						$time = $value['time'];
+					}
+					if (!$this->validateDate($time, "H:i:s")) {
+						$insert = FALSE;
+						$errors[$i]['time'] = "form-error";
+						$user_input['match'][$i]['time'] = "";
+					} else {
+						$errors[$i]['time'] = "form-succes";
+					}
+				} else {
+					$insert = FALSE;
+					$errors[$i]['time'] = "form-error";
+				}
+				$sec = strtotime($value['date']);
+				$user_input['match'][$key]['datefull'] = date('d-m-Y', $sec) . ' ' . $time;
 
 				$countries_check = array();
 				foreach ($wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "poule_countries", ARRAY_A) as $key => $country) {
@@ -145,15 +166,15 @@ class matches {
 				$i++;
 			}
 
-			if ($insert) {
+			if ($insert === TRUE) {
 				$wpdb->insert($wpdb->prefix . 'poule_matches_groups', array('phase' => $phase_id['id'], 'group_name' => $_POST['group_name']));
 				$group_id = $wpdb->insert_id;
-				foreach ($_POST['match'] as $key => $value) {
+				foreach ($user_input['match'] as $key => $value) {
 					$insert = array();
 					$insert['group_id'] = $group_id;
 					$insert['country_1'] = $value['country1'];
 					$insert['country_2'] = $value['country2'];
-					$insert['start_time'] = strtotime($value['date']);
+					$insert['start_time'] = strtotime($value['datefull']);
 					$wpdb->insert($wpdb->prefix . 'poule_matches', $insert);
 				}
 			}
@@ -175,6 +196,8 @@ class matches {
 	public function edit() {
 		global $wpdb;
 
+		$update = null;
+
 		$phase = (isset($_GET['phase'])) ? $_GET['phase'] : "group";
 		$group_id = (isset($_GET['group'])) ? $_GET['group'] : "0";
 
@@ -185,7 +208,11 @@ class matches {
 		$matches = array();
 		foreach ($wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "poule_matches WHERE group_id = " . $group_id, ARRAY_A) as $match) {
 			$add = array();
-			$add['date'] = date("d-m-Y H:i:s", $match['start_time']);
+			$add['datefull'] = date("d-m-Y H:i:s", $match['start_time']);
+
+			$add['date'] = date("Y-m-d", $match['start_time']);
+			$add['time'] = date("H:i", $match['start_time']);
+
 			$add['match_id'] = $match['id'];
 			$countries = array();
 			foreach ($wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "poule_countries", ARRAY_A) as $country) {
@@ -208,7 +235,7 @@ class matches {
 				$i = 0;
 
 				$update = TRUE;
-
+				$input_data = $_POST;
 				if ($_POST['group_name'] == "" || !isset($_POST['group_name'])) {
 					$errors['group_name'] = "form-error";
 					$update = FALSE;
@@ -216,23 +243,40 @@ class matches {
 					$errors['group_name'] = "form-succes";
 				}
 
-				if (isset($_POST['match'])) {
-					foreach ($_POST['match'] as $key => $value) {
-
+				if (isset($input_data['match'])) {
+					foreach ($input_data['match'] as $key => $value) {
 						$row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . "poule_matches WHERE id = '$key'", ARRAY_A);
 						if ($row != NULL) {
 							if ($value['date'] != "") {
-
-								if (!$this->validateDate($value['date'], "d-m-Y H:i:s")) {
-									$update = FALSE;
+								if (!$this->validateDate($value['date'], "Y-m-d")) {
+									$update = FALSE . 'a';
 									$errors[$i]['date'] = "form-error";
 								} else {
 									$errors[$i]['date'] = "form-succes";
 								}
 							} else {
-								$update = FALSE;
+								$update = FALSE . 'b';
 								$errors[$i]['date'] = "form-error";
 							}
+
+							if ($value['time'] != "") {
+								if (strlen($value['time']) == 5) {
+									$time = $value['time'] . ':00';
+								} else {
+									$time = $value['time'];
+								}
+								if (!$this->validateDate($time, "H:i:s")) {
+									$insert = FALSE . 'c';
+									$errors[$i]['time'] = "form-error";
+								} else {
+									$errors[$i]['time'] = "form-succes";
+								}
+							} else {
+								$insert = FALSE . 'd';
+								$errors[$i]['time'] = "form-error";
+							}
+
+							$input_data['match'][$key]['datefull'] = $value['date'] . ' ' . $time;
 
 							$countries_check = array();
 							foreach ($wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "poule_countries", ARRAY_A) as $country) {
@@ -262,13 +306,12 @@ class matches {
 					}
 				}
 
-				if ($update) {
-					echo "UPDATE";
+				if ($update === TRUE) {
 					$wpdb->update($wpdb->prefix . 'poule_matches_groups', array('group_name' => $_POST['group_name']), array('id' => $group_id));
 
-					foreach ($_POST['match'] as $key => $value) {
+					foreach ($input_data['match'] as $key => $value) {
 						$update = array();
-						$update['start_time'] = strtotime($value['date']);
+						$update['start_time'] = strtotime($value['datefull']);
 						$update['country_1'] = $value['country1'];
 						$update['country_2'] = $value['country2'];
 						$wpdb->update($wpdb->prefix . 'poule_matches', $update, array('id' => $key));
@@ -299,7 +342,7 @@ class matches {
 
 		$phase_error = FALSE;
 		$phase_name = (isset($_GET['phase'])) ? $_GET['phase'] : "group";
-		
+
 		$arguments = array();
 		$wk_ek = get_option('poule_phase_settings');
 		$phase_id = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . "poule_phases WHERE name = '$phase_name'", ARRAY_A);
@@ -321,155 +364,233 @@ class matches {
 		$arguments['while_groups'] = array();
 		$match_count = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . "poule_phases WHERE name = '$phase_name'", ARRAY_A);
 		$groups_data = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . "poule_matches_groups WHERE phase = '$phase'", ARRAY_A);
-		
-		if(count($groups_data) != 0){
+		$group_array = array();
+		foreach($groups_data as $value){
+			$group_array[$value['id']] = "";
+		}
+		if (count($groups_data) != 0) {
 			for ($i = 1; $i <= $match_count['count']; $i++) {
 				$groups[$i] = array('countries_options' => $groups_data, 'row' => $i);
 				$arguments['while_groups'][$i] = array('countries_options' => $groups_data, 'row' => $i);
 			}
-
-			if($_SERVER['REQUEST_METHOD'] == "POST"){
-				$place = array();
-				$groups = array();
-
-				foreach($wpdb->get_results('SELECT id FROM ' . $wpdb->prefix . "poule_matches_groups WHERE phase = '$phase'", ARRAY_A) as $group_number => $group){
-					$groups[$group['id']] = array();
-					$place[$group['id']] = array();
-					foreach($wpdb->get_results('SELECT id, country_1, country_2, score FROM ' . $wpdb->prefix . "poule_matches WHERE group_id = '".$group['id']."'", ARRAY_A) as $value){
-						$match_score = unserialize($value['score']);
-						$countries = array('country_1' => $value['country_1'], 'country_2' => $value['country_2']);
-						$groups[$group['id']][$value['id']] = array_merge($countries, $match_score);
-					}
-				}
-
-				foreach ($groups as $group_id => $value) {
-					foreach ($value as $match) {
-						if ($phase == "1") {
-							$won = 0;
-							$equal = 0;
-							$lost = 0;
-							$positive = 0;
-							$negative = 0;
-
-							if ($match['score_1'] > $match['score_2']) {
-								$won++;
-							} else if ($match['score_1'] == $match['score_2']) {
-								$equal++;
+			$errors = array();
+			
+			if ($_SERVER['REQUEST_METHOD'] == "POST") {
+				$i = 0;
+				$input_data = $_POST;
+				$insert = TRUE;
+				
+				if (isset($input_data['group'])) {
+					foreach ($input_data['group'] as $key => $value) {
+						if ($value['name'] == "" || !isset($value['name'])) {
+							$errors[$key]['name'] = "form-error";
+							$insert = FALSE;
+						} else {
+							$errors[$key]['name'] = "form-succes";
+						}
+						
+						if ($value['date'] != "") {
+							if (!$this->validateDate($value['date'], "Y-m-d")) {
+								$insert = FALSE;
+								$errors[$key]['date'] = "form-error";
 							} else {
-								$lost++;
-							}
-							$points = $won * 3 + $equal;
-							if (array_key_exists($match['country_1'], $place[$group_id])) {
-								$place[$group_id][$match['country_1']]['played']++;
-								$place[$group_id][$match['country_1']]['won'] += $won;
-								$place[$group_id][$match['country_1']]['equal'] += $equal;
-								$place[$group_id][$match['country_1']]['lost'] += $lost;
-								$place[$group_id][$match['country_1']]['points'] += $points;
-
-								$place[$group_id][$match['country_1']]['positive'] += $match['score_1'];
-								$place[$group_id][$match['country_1']]['negative'] += $match['score_2'];
-
-								$goal_difference = $place[$group_id][$match['country_1']]['positive'] - $place[$group_id][$match['country_1']]['negative'];
-								$place[$group_id][$match['country_1']]['goal_difference'] = $goal_difference;
-
-								$points2 = $place[$group_id][$match['country_1']]['points'] + $goal_difference / 100 + $place[$group_id][$match['country_1']]['positive'] / 1000;
-								$place[$group_id][$match['country_1']]['points2'] = $points2;
-							} else {
-								$place[$group_id][$match['country_1']] = array('played' => 1, 'won' => $won, 'equal' => $equal, 'lost' => $lost, 'points' => $points, 'positive' => $match['score_1'], 'negative' => $match['score_2']);
-							}
-
-							$won = 0;
-							$equal = 0;
-							$lost = 0;
-							$positive = 0;
-							$negative = 0;
-
-							if ($match['score_2'] > $match['score_1']) {
-								$won++;
-							} else if ($match['score_1'] == $match['score_2']) {
-								$equal++;
-							} else {
-								$lost++;
-							}
-							$points = $won * 3 + $equal;
-							if (array_key_exists($match['country_2'], $place[$group_id])) {
-								$place[$group_id][$match['country_2']]['played']++;
-								$place[$group_id][$match['country_2']]['won'] += $won;
-								$place[$group_id][$match['country_2']]['equal'] += $equal;
-								$place[$group_id][$match['country_2']]['lost'] += $lost;
-								$place[$group_id][$match['country_2']]['points'] += $points;
-
-								$place[$group_id][$match['country_2']]['positive'] += $match['score_2'];
-								$place[$group_id][$match['country_2']]['negative'] += $match['score_1'];
-
-								$goal_difference = $place[$group_id][$match['country_2']]['positive'] - $place[$group_id][$match['country_2']]['negative'];
-								$place[$group_id][$match['country_2']]['goal_difference'] = $goal_difference;
-
-								$points2 = $place[$group_id][$match['country_2']]['points'] + $goal_difference / 100 + $place[$group_id][$match['country_2']]['positive'] / 1000;
-								$place[$group_id][$match['country_2']]['points2'] = $points2;
-							} else {
-								$place[$group_id][$match['country_2']] = array('played' => 1, 'won' => $won, 'equal' => $equal, 'lost' => $lost, 'points' => $points, 'positive' => $match['score_2'], 'negative' => $match['score_1']);
+								$errors[$key]['date'] = "form-succes";
 							}
 						} else {
-							if ($match['score_1'] > $match['score_2']) {
-								$place[$group_id][$match['country_1']]['points2'] = 20;
-								$place[$group_id][$match['country_2']]['points2'] = 10;
-							} else if ($match['score_2'] > $match['score_1']) {
-								$place[$group_id][$match['country_1']]['points2'] = 10;
-								$place[$group_id][$match['country_2']]['points2'] = 20;
-							} else if ($match['score_2'] == $match['score_1']) {
-								if ($match['penalty_1'] == $match['penalty_2']) {
-									$place[$group_id][$match['country_1']]['points2'] = 20;
-									$place[$group_id][$match['country_2']]['points2'] = 20;
-								} else if ($match['penalty_1'] > $match['penalty_2']) {
-									$place[$group_id][$match['country_1']]['points2'] = 20;
-									$place[$group_id][$match['country_2']]['points2'] = 10;
-								} else if ($match['penalty_1'] < $match['penalty_2']) {
-									$place[$group_id][$match['country_1']]['points2'] = 10;
-									$place[$group_id][$match['country_2']]['points2'] = 20;
+							$insert = FALSE;
+							$errors[$key]['date'] = "form-error";
+						}
+						
+						if ($value['time'] != "") {
+							if (strlen($value['time']) == 5) {
+								$time = $value['time'] . ':00';
+							} else {
+								$time = $value['time'];
+							}
+							if (!$this->validateDate($time, "H:i:s")) {
+								$insert = FALSE;
+								$errors[$key]['time'] = "form-error";
+							} else {
+								$errors[$key]['time'] = "form-succes";
+							}
+						} else {
+							$insert = FALSE;
+							$errors[$key]['time'] = "form-error";
+						}
+						
+						$split1 = explode('_', $value['country_1']);
+						if(array_key_exists($split1[0], $group_array)){
+							if($split1[1] == 0 || $split1[1] == 1){
+								$errors[$key]['country_1'] = "form-succes";
+							}else{
+								$insert = FALSE;
+								$errors[$key]['country_1'] = "form-error";
+							}
+						}else{
+							$insert = FALSE;
+							$errors[$key]['country_1'] = "form-error";
+						}
+						
+						$split2 = explode('_', $value['country_2']);
+						if(array_key_exists($split2[0], $group_array)){
+							if($split2[1] == 0 || $split2[1] == 1){
+								$errors[$key]['country_2'] = "form-succes";
+							}else{
+								$insert = FALSE;
+								$errors[$key]['country_2'] = "form-error";
+							}
+						}else{
+							$insert = FALSE;
+							$errors[$key]['country_2'] = "form-error";
+						}
+					}
+					
+					if($insert){
+						
+						//insert code
+						$place = array();
+						$groups = array();
+
+						foreach ($wpdb->get_results('SELECT id FROM ' . $wpdb->prefix . "poule_matches_groups WHERE phase = '$phase'", ARRAY_A) as $group_number => $group) {
+							$groups[$group['id']] = array();
+							$place[$group['id']] = array();
+							foreach ($wpdb->get_results('SELECT id, country_1, country_2, score FROM ' . $wpdb->prefix . "poule_matches WHERE group_id = '" . $group['id'] . "'", ARRAY_A) as $value) {
+								$match_score = unserialize($value['score']);
+								$countries = array('country_1' => $value['country_1'], 'country_2' => $value['country_2']);
+								$groups[$group['id']][$value['id']] = array_merge($countries, $match_score);
+							}
+						}
+
+						foreach ($groups as $group_id => $value) {
+							foreach ($value as $match) {
+								if ($phase == "1") {
+									$won = 0;
+									$equal = 0;
+									$lost = 0;
+									$positive = 0;
+									$negative = 0;
+
+									if ($match['score_1'] > $match['score_2']) {
+										$won++;
+									} else if ($match['score_1'] == $match['score_2']) {
+										$equal++;
+									} else {
+										$lost++;
+									}
+									$points = $won * 3 + $equal;
+									if (array_key_exists($match['country_1'], $place[$group_id])) {
+										$place[$group_id][$match['country_1']]['played']++;
+										$place[$group_id][$match['country_1']]['won'] += $won;
+										$place[$group_id][$match['country_1']]['equal'] += $equal;
+										$place[$group_id][$match['country_1']]['lost'] += $lost;
+										$place[$group_id][$match['country_1']]['points'] += $points;
+
+										$place[$group_id][$match['country_1']]['positive'] += $match['score_1'];
+										$place[$group_id][$match['country_1']]['negative'] += $match['score_2'];
+
+										$goal_difference = $place[$group_id][$match['country_1']]['positive'] - $place[$group_id][$match['country_1']]['negative'];
+										$place[$group_id][$match['country_1']]['goal_difference'] = $goal_difference;
+
+										$points2 = $place[$group_id][$match['country_1']]['points'] + $goal_difference / 100 + $place[$group_id][$match['country_1']]['positive'] / 1000;
+										$place[$group_id][$match['country_1']]['points2'] = $points2;
+									} else {
+										$place[$group_id][$match['country_1']] = array('played' => 1, 'won' => $won, 'equal' => $equal, 'lost' => $lost, 'points' => $points, 'positive' => $match['score_1'], 'negative' => $match['score_2']);
+									}
+
+									$won = 0;
+									$equal = 0;
+									$lost = 0;
+									$positive = 0;
+									$negative = 0;
+
+									if ($match['score_2'] > $match['score_1']) {
+										$won++;
+									} else if ($match['score_1'] == $match['score_2']) {
+										$equal++;
+									} else {
+										$lost++;
+									}
+									$points = $won * 3 + $equal;
+									if (array_key_exists($match['country_2'], $place[$group_id])) {
+										$place[$group_id][$match['country_2']]['played']++;
+										$place[$group_id][$match['country_2']]['won'] += $won;
+										$place[$group_id][$match['country_2']]['equal'] += $equal;
+										$place[$group_id][$match['country_2']]['lost'] += $lost;
+										$place[$group_id][$match['country_2']]['points'] += $points;
+
+										$place[$group_id][$match['country_2']]['positive'] += $match['score_2'];
+										$place[$group_id][$match['country_2']]['negative'] += $match['score_1'];
+
+										$goal_difference = $place[$group_id][$match['country_2']]['positive'] - $place[$group_id][$match['country_2']]['negative'];
+										$place[$group_id][$match['country_2']]['goal_difference'] = $goal_difference;
+
+										$points2 = $place[$group_id][$match['country_2']]['points'] + $goal_difference / 100 + $place[$group_id][$match['country_2']]['positive'] / 1000;
+										$place[$group_id][$match['country_2']]['points2'] = $points2;
+									} else {
+										$place[$group_id][$match['country_2']] = array('played' => 1, 'won' => $won, 'equal' => $equal, 'lost' => $lost, 'points' => $points, 'positive' => $match['score_2'], 'negative' => $match['score_1']);
+									}
+								} else {
+									if ($match['score_1'] > $match['score_2']) {
+										$place[$group_id][$match['country_1']]['points2'] = 20;
+										$place[$group_id][$match['country_2']]['points2'] = 10;
+									} else if ($match['score_2'] > $match['score_1']) {
+										$place[$group_id][$match['country_1']]['points2'] = 10;
+										$place[$group_id][$match['country_2']]['points2'] = 20;
+									} else if ($match['score_2'] == $match['score_1']) {
+										if ($match['penalty_1'] == $match['penalty_2']) {
+											$place[$group_id][$match['country_1']]['points2'] = 20;
+											$place[$group_id][$match['country_2']]['points2'] = 20;
+										} else if ($match['penalty_1'] > $match['penalty_2']) {
+											$place[$group_id][$match['country_1']]['points2'] = 20;
+											$place[$group_id][$match['country_2']]['points2'] = 10;
+										} else if ($match['penalty_1'] < $match['penalty_2']) {
+											$place[$group_id][$match['country_1']]['points2'] = 10;
+											$place[$group_id][$match['country_2']]['points2'] = 20;
+										}
+									}
 								}
 							}
 						}
+
+						foreach ($_POST['group'] as $group) {
+							$insert_group = array();
+							$insert_group['group_name'] = $group['name'];
+							$insert_group['phase'] = $phase_id['id'];
+
+							$group_id = $wpdb->insert($wpdb->prefix . 'poule_matches_groups', $insert_group);
+
+							$insert_matches = array();
+							$insert_matches['group_id'] = $group_id;
+							$insert_matches['start_time'] = strtotime($group['date']);
+
+							$old_group = explode('_', $group['country_1']);
+
+							foreach ($place[$old_group[0]] as $key => $value) {
+								$place[$old_group[0]][$key]['country'] = $key;
+							}
+
+							$podium = $this->array_sort_by_column($place[$old_group[0]], 'points2', SORT_DESC);
+
+							$insert_matches['country_1'] = $podium[$old_group[1]]['country'];
+
+							$old_group = explode('_', $group['country_2']);
+
+							foreach ($place[$old_group[0]] as $key => $value) {
+								$place[$old_group[0]][$key]['country'] = $key;
+							}
+							$podium = $this->array_sort_by_column($place[$old_group[0]], 'points2', SORT_DESC);
+
+							$insert_matches['country_2'] = $podium[$old_group[1]]['country'];
+
+							$wpdb->insert($wpdb->prefix . 'poule_matches', $insert_matches);
+						}
 					}
-				}
-
-				foreach ($_POST['group'] as $group) {
-					$insert_group = array();
-					$insert_group['group_name'] = $group['name'];
-					$insert_group['phase'] = $phase_id['id'];
-
-					$group_id = $wpdb->insert($wpdb->prefix . 'poule_matches_groups', $insert_group);
-
-					$insert_matches = array();
-					$insert_matches['group_id'] = $group_id;
-					$insert_matches['start_time'] = strtotime($group['date']);
-
-					$old_group = explode('_', $group['country_1']);
-
-					foreach ($place[$old_group[0]] as $key => $value) {
-						$place[$old_group[0]][$key]['country'] = $key;
-					}
-
-					$podium = $this->array_sort_by_column($place[$old_group[0]], 'points2', SORT_DESC);
-
-					$insert_matches['country_1'] = $podium[$old_group[1]]['country'];
-
-					$old_group = explode('_', $group['country_2']);
-
-					foreach ($place[$old_group[0]] as $key => $value) {
-						$place[$old_group[0]][$key]['country'] = $key;
-					}
-					$podium = $this->array_sort_by_column($place[$old_group[0]], 'points2', SORT_DESC);
-
-					$insert_matches['country_2'] = $podium[$old_group[1]]['country'];
-
-					$wpdb->insert($wpdb->prefix . 'poule_matches', $insert_matches);
 				}
 			}
-		}else{
+		} else {
 			$phase_error = TRUE;
 		}
-		
+
 		require_once POULE_PATH . 'poule-admin/templates/matches/auto.php';
 	}
 
@@ -495,12 +616,11 @@ class matches {
 	 * @param type $dir
 	 * @return type
 	 */
-	private function array_sort_by_column($multiArray, $col, $dir = SORT_ASC)
-	{
+	private function array_sort_by_column($multiArray, $col, $dir = SORT_ASC) {
 		$keys = array();
 		$sort = array();
 		foreach ($multiArray as $key => $row) {
-			$keys[$key]  = $key;
+			$keys[$key] = $key;
 			$sort[$key] = $row[$col];
 		}
 

@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Mon Oct 07 2013 16:25:43 GMT+0200 (West-Europa "
 "(zomertijd))\n"
-"PO-Revision-Date: 2013-10-07 17:30+0100\n"
+"PO-Revision-Date: 2013-10-12 22:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: Dutch\n"
@@ -132,17 +132,44 @@ msgstr "Toevoegen"
 msgid "Add country"
 msgstr "Land toevoegen"
 
-msgid "Save Country"
-msgstr "Land opslaan"
+msgid "Group name"
+msgstr "Groep naam"
 
 msgid "Groupname"
 msgstr "Groep's naam"
 
+msgid "Matches"
+msgstr "Wedstrijden"
+
 msgid "starttime"
 msgstr "Starttijd"
 
+msgid "Error in the url"
+msgstr "Error in de url"
+
+msgid "changes are saved"
+msgstr "Wijzigingen zijn opgeslagen"
+
 msgid "Group is deletet"
 msgstr "Groep is verwijdert"
+
+msgid "group name"
+msgstr "groupname"
+
+msgid "Start time"
+msgstr "Starttijd"
+
+msgid "first"
+msgstr "Eerste"
+
+msgid "second"
+msgstr "Tweede"
+
+msgid "add"
+msgstr "Toevoegen"
+
+msgid "This function can not be used on this moment"
+msgstr "Deze functie kan niet worden gebruikt op dit moment"
 
 msgid "Add Match"
 msgstr "Wedstrijd toevoegen"
@@ -152,9 +179,6 @@ msgstr "Auto wedstrijden aanmaken"
 
 msgid "Add matches"
 msgstr "Wedstrijden toevoegen"
-
-msgid "Group name"
-msgstr "Groep naam"
 
 msgid "Login required"
 msgstr "Login is verplicht"
@@ -168,29 +192,29 @@ msgstr "Poule score"
 msgid "own score"
 msgstr "Eigen score"
 
-msgid "Start time"
-msgstr "Starttijd"
-
 msgid "set score"
 msgstr "Score plaatsen"
 
-msgid "Group"
-msgstr "Groep"
+msgid "Save Counry"
+msgstr "Land Opslaan"
 
-msgid "18 Final"
-msgstr "1/8 Finale"
+msgid "group"
+msgstr "group"
 
-msgid "Quaterfinal"
-msgstr "Kwartfinale"
+msgid "18 final"
+msgstr "18de finale"
 
-msgid "Semifinal"
-msgstr "Halvefinale"
+msgid "quaterfinal"
+msgstr "kwart finale"
 
-msgid "3 4 Place"
-msgstr "3e 4e Plaats"
+msgid "semifinal"
+msgstr "halve finale"
 
-msgid "Final"
-msgstr "Finale"
+msgid "3 4 place"
+msgstr "3de 4de plaats"
+
+msgid "final"
+msgstr "finale"
 
 msgid "countries"
 msgstr "Landen"

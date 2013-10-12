@@ -36,7 +36,10 @@
 										<tr>
 											<td>
 												<div>
-													<input type="text" class="<?php echo $errors[$i]['date']; ?>" name="match[<?php echo $i; ?>][date]" value="<?php echo $user_input['match'][$i]['date']; ?>"/>
+													
+													<input type="date" class="<?php echo $errors[$i]['date']; ?>" id="match_<?php echo $i; ?>" name="match[<?php echo $i; ?>][date]" value="<?php echo $user_input['match'][$i]['date']; ?>"/>
+													<input type="time" class="<?php echo $errors[$i]['time']; ?>" id="match_<?php echo $i; ?>" name="match[<?php echo $i; ?>][time]" value="<?php echo $user_input['match'][$i]['time']; ?>"/>
+													
 												</div>
 											</td>
 											<td>

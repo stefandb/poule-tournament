@@ -19,6 +19,11 @@ class poule_url {
 	 * @return nothing class the correct class
 	 */
 	public function Load() {
+		
+		if ( !get_option( 'users_can_register' ) ){
+			echo '<div class="updated"><p>'.__( 'User register must be enabled' , 'poule-system'). '</p></div>';
+		}
+		
 		$class = $_GET['page'];
 		if (file_exists(POULE_PATH . 'poule-admin/classes/' . $class . '.php')) {
 			$funtion = (isset($_GET['function'])) ? $_GET['function'] : "home";

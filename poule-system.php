@@ -4,7 +4,7 @@
 	  Plugin Name: Poule tournament
 	  Plugin URI: http://stefandebruin.eu/plugin-poule
 	  Description: Wordpress plugin to set you online poule tournament system
-	  Version: 1.0.1
+	  Version: 1.1
 	  Author: Stefan de Bruin
 	  Author URI: http://stefandebruin.eu
 	 */
@@ -149,8 +149,11 @@
 		 */
 		function add_css() {
 			$siteurl = get_option('siteurl') . '/wp-content/plugins/' . basename(dirname(__FILE__));
-			wp_register_style('poule-system', $siteurl . '/poule-admin/css/stylesheet.css');
-			wp_enqueue_style('poule-system');
+			wp_register_style('poule-dtpicker', $siteurl . '/css/jquery.simple-dtpicker.css');
+			wp_enqueue_style('poule-dtpicker');
+			
+			wp_register_style('poule-stylesheet', $siteurl . '/css/stylesheet.css');
+			wp_enqueue_style('poule-stylesheet');
 		}
 
 		/**
@@ -165,8 +168,11 @@
 		 */
 		function add_js() {
 			$siteurl = get_option('siteurl') . '/wp-content/plugins/' . basename(dirname(__FILE__));
-			wp_register_script('poule-system', $siteurl . '/poule-admin/js/poule.js');
-			wp_enqueue_script('poule-system');
+			wp_register_script('poule-dtpicker', $siteurl . '/js/jquery.simple-dtpicker.js');
+			wp_enqueue_script('poule-dtpicker');
+
+			wp_register_script('poule-js', $siteurl . '/js/poule.js');
+			wp_enqueue_script('poule-js');
 		}
 
 	}

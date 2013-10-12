@@ -1,6 +1,6 @@
 <div class="wrap">
 	<?php if ($phase_error === FALSE) { ?>
-		<form action="poule/admin_automatch/<?php echo $phase_name; ?>" method="post">
+		<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 			<div id="wpt_settings_page" class="postbox-container" style="width: 100%">
 
 				<div class="metabox-holder">
@@ -8,7 +8,7 @@
 					<div class="ui-sortable meta-box-sortables">
 						<?php foreach ($groups as $group) { ?>
 							<div class="postbox">
-								<h3><?php _e('Group name', 'poule-system') ?><input type="text" name="group[<?php echo $group['row']; ?>][name]" class="form-control" placeholder="<?php _e('group name', 'poule-system'); ?>"/></h3>
+								<h3><input type="text" name="group[<?php echo $group['row']; ?>][name]" class="form-control" placeholder="<?php _e('group name', 'poule-system'); ?>"/></h3>
 
 
 								<table class="widefat" cellspacing="0">
@@ -22,7 +22,9 @@
 									</thead>
 									<tbody>
 									<td>
-										<input data-format="dd-MM-yyyy hh:mm:ss" class="form-control" type="text" name="group[<?php echo $group['row']; ?>][date]"/>
+<!--										<input data-format="dd-MM-yyyy hh:mm:ss" class="form-control" type="text" name="group[<?php echo $group['row']; ?>][date]"/>-->
+										<input type="date" ng-model="dateString" class="<?php echo $errors[$i]['date']; ?>" name="group[<?php echo $group['row']; ?>][date]" value="<?php echo $match['date']; ?>"/>
+										<input type="time" class="<?php echo $errors[$i]['time']; ?>" name="group[<?php echo $group['row']; ?>][time]" value="<?php echo $match['time']; ?>"/>
 									</td>
 									<td>
 										<select name="group[<?php echo $group['row']; ?>][country_1]" class="form-control">

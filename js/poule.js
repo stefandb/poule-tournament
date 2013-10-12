@@ -36,3 +36,12 @@ function getParameter(paramName) {
 	}
 	return null;
 }
+
+jQuery('input').datepicker({
+    beforeShow:function(input) {
+        jQuery(input).css({
+            "position": "relative",
+            "z-index": 999999
+        });
+    }
+});
